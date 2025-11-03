@@ -12,35 +12,13 @@ import {
 } from "@/components/ui/sidebar";
 import { GET_CHARACTERS } from "@/lib/query";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Character } from "@/app/layout"; // Asegúrate de importar la interfaz Character correcta
 
-interface Location {
-  name: string;
-  type: string;
-  dimension: string;
+interface CharacterSidebarProps {
+  onSelectCharacter: (char: Character) => void; // <-- define la prop
 }
 
-interface Episode {
-  id: string;
-  name: string;
-  air_date: string;
-  episode: string;
-}
-
-interface Character {
-  id: string;
-  name: string;
-  status?: string;
-  species?: string;
-  type?: string;
-  gender?: string;
-  origin?: Location;
-  location?: Location;
-  image?: string;
-  episode?: Episode[];
-  created?: string;
-}
-
-export default function CharacterSidebar() {
+export default function CharacterSidebar({ onSelectCharacter }: CharacterSidebarProps) {
   const [characters, setCharacters] = useState<Character[]>([]);
 
   useEffect(() => {
@@ -72,7 +50,8 @@ export default function CharacterSidebar() {
               {characters.map((char) => (
                 <SidebarMenuItem
                   key={char.id}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-3 cursor-pointer"
+                  onClick={() => onSelectCharacter(char)}
                 >
                   <Avatar className="w-8 h-8">
                     <AvatarImage src={char.image} alt={char.name} />
