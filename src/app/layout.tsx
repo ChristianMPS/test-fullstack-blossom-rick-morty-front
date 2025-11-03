@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body className="flex min-h-screen">
         <SidebarProvider>
-          <CharacterSidebar onSelectCharacter={setSelectedCharacter} />
+          <CharacterSidebar onSelectCharacter={setSelectedCharacter} selectedCharacter={selectedCharacter} />
           <main className="flex-1 bg-white p-8">
             {selectedCharacter ? (
               <CharacterDetails character={selectedCharacter} />
