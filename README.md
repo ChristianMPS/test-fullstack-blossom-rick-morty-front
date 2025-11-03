@@ -2,6 +2,8 @@
 
 Getting Started
 
+0. First please run the backend, go and see readme in that project.
+
 1. Install Dependencies
 
 Run the following command to install all required packages: npm install
