@@ -6,34 +6,61 @@ interface CharacterDetailsProps {
 }
 
 export default function CharacterDetails({ character }: CharacterDetailsProps) {
+  const features = [
+    { label: "Status", value: character.status },
+    { label: "Specie", value: character.species },
+    { label: "Type", value: character.type },
+    { label: "Gender", value: character.gender },
+    {
+      label: "Origin",
+      value: character.origin
+        ? character.origin.dimension
+          ? `${character.origin.name} (${character.origin.dimension})`
+          : character.origin.name
+        : null,
+    },
+    {
+      label: "Location",
+      value: character.location
+        ? character.location.dimension
+          ? `${character.location.name} (${character.location.dimension})`
+          : character.location.name
+        : null,
+    },
+
+    { label: "Created", value: character.created },
+  ].filter((f) => f.value);
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">{character.name}</h2>
-      <Avatar className="w-24 h-24">
+    <div className="flex flex-col items-center pl-20 pr-20 w-full">
+      <Avatar className="w-50 h-50 mb-6">
         <AvatarImage src={character.image} alt={character.name} />
         <AvatarFallback>{character.name.charAt(0)}</AvatarFallback>
       </Avatar>
-      <p><strong>Estado:</strong> {character.status}</p>
-      <p><strong>Especie:</strong> {character.species}</p>
-      {character.type && <p><strong>Tipo:</strong> {character.type}</p>}
-      <p><strong>Género:</strong> {character.gender}</p>
-      {character.origin && (
-        <p><strong>Origen:</strong> {character.origin.name} ({character.origin.dimension})</p>
-      )}
-      {character.location && (
-        <p><strong>Ubicación:</strong> {character.location.name} ({character.location.dimension})</p>
-      )}
+
+      <h2 className="text-3xl font-bold mb-6">{character.name}</h2>
+
+      <div className="w-full space-y-4">
+        {features.map((feature, index) => (
+          <div key={index} className="flex flex-col">
+            <span className="text-gray-500 font-medium">{feature.label}</span>
+            <span className="text-gray-800 font-semibold">{feature.value}</span>
+            <hr className="border-t border-gray-300 mt-1" />
+          </div>
+        ))}
+      </div>
+
       {character.episode && character.episode.length > 0 && (
-        <div>
-          <strong>Episodios:</strong>
-          <ul className="list-disc list-inside">
+        <div className="w-full mt-6">
+          <h3 className="font-bold mb-2">Episodios</h3>
+          <ul className="list-disc list-inside space-y-1">
             {character.episode.map((ep) => (
-              <li key={ep.id}>{ep.episode} - {ep.name} ({ep.air_date})</li>
+              <li key={ep.id}>
+                {ep.episode} - {ep.name} ({ep.air_date})
+              </li>
             ))}
           </ul>
         </div>
       )}
-      <p><strong>Creado:</strong> {character.created}</p>
     </div>
   );
 }
