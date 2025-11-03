@@ -2,7 +2,7 @@
 
 Getting Started
 
-0. First please run the backend, go and see readme in that project.
+0. First please run the backend, go and see readme in that project. (npx ts-node src/index.ts in terminal backend)
 
 1. Install Dependencies
 
