@@ -94,6 +94,9 @@ export default function CharacterSidebar({
 
   return (
     <Sidebar className="w-80">
+      <h1 className=" text-center text-lg font-bold text-gray-900 mt-2">
+        Rick & Morty list
+      </h1>
       <SidebarContent>
         <div className="px-4 py-2 flex items-center gap-2">
           <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-2 py-1 flex-1">

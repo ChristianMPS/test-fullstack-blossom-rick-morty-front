@@ -5,7 +5,7 @@ export default function HomePage() {
         Rick & Morty - Test FullStack
       </h1>
       <p className="mt-4 text-gray-600">
-        Selecciona un personaje desde la barra lateral 👈
+        Select a character from the sidebar 👈
       </p>
     </div>
   );
