@@ -3,8 +3,28 @@ export const GET_CHARACTERS = `
     characters {
       id
       name
+      status
       species
+      type
+      gender
+      origin {
+        name
+        type
+        dimension
+      }
+      location {
+        name
+        type
+        dimension
+      }
       image
+      episode {
+        id
+        name
+        air_date
+        episode
+      }
+      created
     }
   }
 `;
