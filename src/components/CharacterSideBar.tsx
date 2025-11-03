@@ -8,15 +8,19 @@ import { Search } from "./icons/Search";
 import { GET_CHARACTERS } from "@/lib/query";
 import { CharacterGroup } from "./CharacterGroup";
 import { FilterPanel } from "./FilterPanel";
-
+import { CharacterLoader } from "./CharacterLoader";
 
 interface CharacterSidebarProps {
   selectedCharacter: Character | null;
   onSelectCharacter: (char: Character) => void;
 }
 
-export default function CharacterSidebar({ onSelectCharacter, selectedCharacter }: CharacterSidebarProps) {
+export default function CharacterSidebar({
+  onSelectCharacter,
+  selectedCharacter,
+}: CharacterSidebarProps) {
   const [characters, setCharacters] = useState<Character[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeStatus, setActiveStatus] = useState("All");
   const [activeSpecie, setActiveSpecie] = useState("All");
@@ -38,13 +42,19 @@ export default function CharacterSidebar({ onSelectCharacter, selectedCharacter 
         setCharacters(json.data.characters as Character[]);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     }
     fetchData();
   }, []);
 
   const toggleFavorite = (char: Character) => {
-    setFavorites((prev) => prev.find((c) => c.id === char.id) ? prev.filter((c) => c.id !== char.id) : [...prev, char]);
+    setFavorites((prev) =>
+      prev.find((c) => c.id === char.id)
+        ? prev.filter((c) => c.id !== char.id)
+        : [...prev, char]
+    );
   };
 
   const applyFilter = () => {
@@ -53,22 +63,33 @@ export default function CharacterSidebar({ onSelectCharacter, selectedCharacter 
     setActiveGender(tempGender);
   };
 
-  const statusOptions = ["All", ...Array.from(new Set(characters.map(c => c.status ?? "Unknown")))];
-  const specieOptions = ["All", ...Array.from(new Set(characters.map(c => c.species ?? "Unknown")))];
-  const genderOptions = ["All", ...Array.from(new Set(characters.map(c => c.gender ?? "Unknown")))];
+  const statusOptions = [
+    "All",
+    ...Array.from(new Set(characters.map((c) => c.status ?? "Unknown"))),
+  ];
+  const specieOptions = [
+    "All",
+    ...Array.from(new Set(characters.map((c) => c.species ?? "Unknown"))),
+  ];
+  const genderOptions = [
+    "All",
+    ...Array.from(new Set(characters.map((c) => c.gender ?? "Unknown"))),
+  ];
 
-  const filteredCharacters = characters.filter(c => 
-    (c.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (activeStatus === "All" || c.status === activeStatus) &&
-    (activeSpecie === "All" || c.species === activeSpecie) &&
-    (activeGender === "All" || c.gender === activeGender)
+  const filteredCharacters = characters.filter(
+    (c) =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (activeStatus === "All" || c.status === activeStatus) &&
+      (activeSpecie === "All" || c.species === activeSpecie) &&
+      (activeGender === "All" || c.gender === activeGender)
   );
 
-  const filteredFavorites = favorites.filter(c =>
-    (c.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (activeStatus === "All" || c.status === activeStatus) &&
-    (activeSpecie === "All" || c.species === activeSpecie) &&
-    (activeGender === "All" || c.gender === activeGender)
+  const filteredFavorites = favorites.filter(
+    (c) =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (activeStatus === "All" || c.status === activeStatus) &&
+      (activeSpecie === "All" || c.species === activeSpecie) &&
+      (activeGender === "All" || c.gender === activeGender)
   );
 
   return (
@@ -82,7 +103,7 @@ export default function CharacterSidebar({ onSelectCharacter, selectedCharacter 
               placeholder="Buscar personaje..."
               className="ml-2 flex-1 bg-transparent border-none focus:ring-0 focus:outline-none"
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <FilterPanel
               activeStatus={activeStatus}
@@ -102,23 +123,31 @@ export default function CharacterSidebar({ onSelectCharacter, selectedCharacter 
           </div>
         </div>
 
-        <CharacterGroup
-          title="Starred characters"
-          characters={filteredFavorites}
-          selectedCharacter={selectedCharacter}
-          favorites={favorites}
-          onSelectCharacter={onSelectCharacter}
-          toggleFavorite={toggleFavorite}
-        />
+        {loading ? (
+          Array.from({ length: 20 }).map((_, i) => <CharacterLoader key={i} />)
+        ) : (
+          <>
+            <CharacterGroup
+              title="Starred characters"
+              characters={filteredFavorites}
+              selectedCharacter={selectedCharacter}
+              favorites={favorites}
+              onSelectCharacter={onSelectCharacter}
+              toggleFavorite={toggleFavorite}
+            />
 
-        <CharacterGroup
-          title="Characters"
-          characters={filteredCharacters.filter(c => !favorites.find(f => f.id === c.id))}
-          selectedCharacter={selectedCharacter}
-          favorites={favorites}
-          onSelectCharacter={onSelectCharacter}
-          toggleFavorite={toggleFavorite}
-        />
+            <CharacterGroup
+              title="Characters"
+              characters={filteredCharacters.filter(
+                (c) => !favorites.find((f) => f.id === c.id)
+              )}
+              selectedCharacter={selectedCharacter}
+              favorites={favorites}
+              onSelectCharacter={onSelectCharacter}
+              toggleFavorite={toggleFavorite}
+            />
+          </>
+        )}
       </SidebarContent>
     </Sidebar>
   );
